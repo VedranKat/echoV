@@ -365,7 +365,11 @@ struct TranscriptionSettingsView: View {
     }
 
     private var llamaRuntimeInstallMessage: String {
-        switch container.modelStore.llamaRuntimeInstallState {
+        if !container.settings.isPostProcessingEnabled {
+            return "Prime is off. llama-server will stay stopped."
+        }
+
+        return switch container.modelStore.llamaRuntimeInstallState {
         case .idle:
             "Managed download: ggml-org/llama.cpp / \(LlamaRuntimeLayout.archiveFileName)"
         default:
@@ -374,6 +378,10 @@ struct TranscriptionSettingsView: View {
     }
 
     private var llamaRuntimeBadgeText: String {
+        if !container.settings.isPostProcessingEnabled {
+            return "Off"
+        }
+
         if container.modelStore.selectedLlamaRuntime?.validation.isValid == true {
             return "Ready"
         }
@@ -390,6 +398,10 @@ struct TranscriptionSettingsView: View {
     }
 
     private var llamaRuntimeTone: StatusBadge.Tone {
+        if !container.settings.isPostProcessingEnabled {
+            return .neutral
+        }
+
         if container.modelStore.selectedLlamaRuntime?.validation.isValid == true {
             return .success
         }

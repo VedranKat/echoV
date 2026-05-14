@@ -321,6 +321,10 @@ struct StatusOverviewView: View {
             return "Off"
         }
 
+        if container.modelStore.selectedLlamaRuntime?.validation.isValid != true {
+            return "Runtime needed"
+        }
+
         if container.modelStore.selectedPostProcessingModel?.validation.isValid == true {
             return "Ready"
         }
@@ -339,6 +343,10 @@ struct StatusOverviewView: View {
     private var postProcessingTone: StatusBadge.Tone {
         guard container.settings.isPostProcessingEnabled else {
             return .neutral
+        }
+
+        if container.modelStore.selectedLlamaRuntime?.validation.isValid != true {
+            return .warning
         }
 
         if container.modelStore.selectedPostProcessingModel?.validation.isValid == true {
